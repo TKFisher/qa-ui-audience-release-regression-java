@@ -9,8 +9,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+
 
 public class KomoNewsUI
 {
@@ -34,15 +34,17 @@ public class KomoNewsUI
         }
 
         @Test
-        public void home(){
+        public void homeTest(){
+            driver.getTitle();
+            assertTrue(String.valueOf(driver.getTitle().endsWith("KOMO")), true);
 
         }
 
         @Test
-        public void scratch_1()
+        public void scratchTest_1()
         {
             WebElement watch = driver.findElement(By.id("nav-watch-live"));
-            assertTrue("Watch menu label not correct", watch.getText().contains("WATCHx"));
+            assertTrue("Watch menu label not correct", watch.getText().contains("WATCH"));
             watch.click();
             // if Live Watch assert:
                 // title = KOMO LIVE Broadcast
