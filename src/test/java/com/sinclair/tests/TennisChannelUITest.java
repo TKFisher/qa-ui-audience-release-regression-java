@@ -1,5 +1,6 @@
 package com.sinclair.tests;
 
+
 import org.openqa.selenium.WebDriver;
 import org.junit.*;
 import org.openqa.selenium.chrome.ChromeDriver;
