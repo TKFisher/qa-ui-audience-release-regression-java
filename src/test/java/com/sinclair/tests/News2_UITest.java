@@ -129,10 +129,10 @@ public class News2_UITest
         assertThat("Radio page title",driver.getTitle(),containsString("Seattle About KOMO"));
     }
 
-    // Radio2 using the Actions class to do a hover over the Radio menu and then do a click on the submenu "KOMO RADIO EVENTS"
-    // BUT - it's not working. For some reason the hover is not working which is needed to expose the sub menu
+    // RadioSubMenu: using the Actions class to do a hover over the Radio menu and then do a click on the submenu "KOMO RADIO EVENTS"
+    // BUT - it's not working. The hover is not working which is needed to expose the sub menu.  See solution for menuRadioSubMenu2Test()
     @Test
-    public void menuRadio2Test()
+    public void menuRadioSubMenu1Test()
     {
         // Hover and click
         WebElement elementToHover = (new WebDriverWait(driver, 3).until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("div a[id^='Radio-']"))));
@@ -149,33 +149,28 @@ public class News2_UITest
         assertThat(driver.getTitle(), containsString("Radio Events"));
     }
 
-    // Third way that works!
+    // This solve's the above problem with sub menu element not getting found by moving the initialization of subMenu WebElement to after the Actions class.
+    // Also used 'visibilityOfElementLocated' and 'elementToBeClickable' instead of 'presenceOfElementLocated'
+    // Both cssSeclector and xPath work so left them in for comparison.
     @Test
-    public void menuRadio3Test() {
+    public void menuRadioSubMenu2Test()
+    {
+        // Adding wait class
+        WebDriverWait wait = new WebDriverWait(driver,5);
 
-
-        //Adding wait class
-        WebDriverWait wait = new WebDriverWait(driver, 5);
-
-
-        //Using XPath which seems to work better & added wait for reliability
-        WebElement hoverRadio = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\'Radio-c78461f9-6da7-4c11-ae01-e6eab1526633\']")));
-
-
+        // Using XPath which seems to work better & added wait for reliability
+        //WebElement hoverRadio = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\'Radio-c78461f9-6da7-4c11-ae01-e6eab1526633\']")));
+        WebElement hoverRadio = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div a[id^='Radio-']")));
 
         Actions action = new Actions(driver);
         action.moveToElement(hoverRadio).build().perform();
 
-        //We cant define and find the radioEvents webElement for the sub menu until we've
-        //successfully opened the subnav
-        //Using XPath which seems to work better & added wait for reliability
-        WebElement radioEvents = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\'sd-subnavs\']/div[6]/ul/li[2]/a")));
+        // We can't define and find the subMenu webElement for the sub menu until we've successfully opened the sub nav.
+        // WebElement subMenu = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\'sd-subnavs\']/div[6]/ul/li[2]/a")));
+        WebElement subMenu = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("[data-name='KOMO Radio Events'][class='sd-link']")));
+        subMenu.click();
 
-        radioEvents.click();
-
-        assertThat(driver.getTitle(), containsString("Radio Events"));
-
+        assertThat(driver.getTitle(),containsString("Radio Events"));
     }
-
 
 }
